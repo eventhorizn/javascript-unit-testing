@@ -99,3 +99,54 @@ A framework/philosophy for writing tests
        "test": "vitest --globals"
    }
    ```
+
+# The Basics
+
+1. Creating unit tests
+1. AAA - Arrange, Act, Assert
+1. What to test & organizing tests
+
+## Writing a Test
+
+1. Generally, your test lives alongside your class
+   - math.js and math.test.js (can be math.spec.js)
+
+```js
+import { it, expect } from 'vitest';
+import { add } from './math';
+
+it('should summarize all number values in an array', () => {
+	const result = add([1, 2, 3]);
+	expect(result).toBe(6);
+});
+```
+
+```npm
+npm run test
+```
+
+## Arrange, Act, Assert
+
+1. Arrange: Define the testing environment & values
+1. Act: Run the actual code/function that should be tested
+1. Assert: Evaluate the produced value/result and compare to the expected value/result
+
+```js
+import { it, expect } from 'vitest';
+import { add } from './math';
+
+it('should summarize all number values in an array', () => {
+	// Arrange
+	const numbers = [1, 2, 3];
+	const expectedResult = numbers.reduce(
+		(prevVal, curVal) => prevVal + curVal,
+		0
+	);
+
+	// Act
+	const result = add(numbers);
+
+	// Assert
+	expect(result).toBe(expectedResult);
+});
+```
