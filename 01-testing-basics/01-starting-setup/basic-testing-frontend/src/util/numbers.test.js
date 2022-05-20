@@ -25,5 +25,5 @@ it('should yield NaN for non-transformable values', () => {
 	const result2 = transformToNumber(input2);
 
 	expect(result).toBeNaN();
-	expect(result).toBeNaN();
+	expect(result2).toBeNaN();
 });
