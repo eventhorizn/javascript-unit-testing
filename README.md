@@ -150,3 +150,31 @@ it('should summarize all number values in an array', () => {
 	expect(result).toBe(expectedResult);
 });
 ```
+
+# Writing Good Tests
+
+1. Your tests should only test your code
+1. Don't test third-party code
+   - Don't test what you can't change
+1. If the 'third-party' code is your code
+   - Test it separately
+1. You should test client-side reactions to different response & errors
+
+## General Guidelines
+
+1. Follow **AAA**
+1. Only test **one thing**
+   - What is 'one thing'?
+   - One feature/behavior
+   - Validate input OR transform it
+1. Focus on the **essence** of a test when arranging
+1. Keep the number of **assertions** low
+
+## Code Coverage
+
+1. You want to write test for the majority of your code
+1. The goal is not necessarily 100% coverage
+   - There is always some code that doesn't need any tests
+     - it calls other functions that are tested already
+1. Full code coverage isn't any guarntee that you wrote good tests
+   - Code coverage is important, but not an indication that you've written good tests
