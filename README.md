@@ -178,3 +178,132 @@ it('should summarize all number values in an array', () => {
      - it calls other functions that are tested already
 1. Full code coverage isn't any guarntee that you wrote good tests
    - Code coverage is important, but not an indication that you've written good tests
+
+# Advanced Testing Concepts
+
+## toBe() vs toEqual()
+
+```js
+it('should return an array of number values if an array of string number values is provided', () => {
+	const numberValues = ['1', '2'];
+
+	const cleanedNumbers = cleanNumbers(numberValues);
+
+	//expect(cleanedNumbers[0]).toBeTypeOf('number');
+	expect(cleanedNumbers).toBe([1, 2]);
+});
+```
+
+This fails as we are expecting two arrays to be pointing to the same reference location.
+
+Instead use this:
+
+```js
+it('should return an array of number values if an array of string number values is provided', () => {
+	const numberValues = ['1', '2'];
+
+	const cleanedNumbers = cleanNumbers(numberValues);
+
+	//expect(cleanedNumbers[0]).toBeTypeOf('number');
+	expect(cleanedNumbers).toEqual([1, 2]);
+});
+```
+
+## Async Code
+
+You have to do some interesting things to make async code work in a test
+
+```js
+import { it, expect } from 'vitest';
+import { generateToken } from './async-example';
+
+it('should generate a token value', (done) => {
+	const testUserEmail = 'test@test.com';
+
+	generateToken(testUserEmail, (err, token) => {
+		try {
+			expect(token).toBeDefined();
+			done();
+		} catch (err) {
+			done(err);
+		}
+	});
+});
+```
+
+1. The `done` function is necessary
+1. You must wrap the code you are testing an a `try/catch`
+1. Have dones for success and failure
+
+## Promises
+
+You can use build in 'await' features in the testing framework:
+
+```js
+it('should generate a token value', () => {
+	const testUserEmail = 'test@test.com';
+
+	return expect(generateTokenPromise(testUserEmail)).resolves.toBeDefined();
+});
+```
+
+Or you can manually define the test as async/await
+
+```js
+it('should generate a token value', async () => {
+	const testUserEmail = 'test@test.com';
+
+	const token = await generateTokenPromise(testUserEmail);
+
+	expect(token).toBeDefined();
+});
+```
+
+## Testing Hooks
+
+- If you apply the hooks in the suite, they apply to that suite only
+- If you add them in the file, they apply to all tests in the file
+
+```js
+import { it, expect, beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
+import { User } from './hooks';
+
+const testEmail = 'test@test.com';
+let user;
+
+beforeAll(() => {
+	user = new User(testEmail);
+	console.log('beforeAll()');
+});
+
+beforeEach(() => {
+	user = new User(testEmail);
+	console.log('beforeEach()');
+});
+
+afterEach(() => {
+	//user = new User(testEmail);
+	console.log('afterEach()');
+});
+
+afterAll(() => {
+	console.log('afterAll()');
+});
+```
+
+## Concurrent Tests
+
+- By default tests run one after the other
+- Adding concurrent to the tests or suite will run them at the same time
+
+```js
+// suite
+describe.concurrent();
+
+// test
+it.concurrent('should store the provided email value', () => {
+	expect(user.email).toBe(testEmail);
+});
+```
+
+- Even when not adding the `.concurrent` property, tests that are stored in different files are executed concurrently
