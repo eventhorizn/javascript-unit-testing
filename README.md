@@ -307,3 +307,57 @@ it.concurrent('should store the provided email value', () => {
 ```
 
 - Even when not adding the `.concurrent` property, tests that are stored in different files are executed concurrently
+
+# Spies & Mocks (Dealing with Side Effects)
+
+1. Spies
+   - Wrappers around functions
+   - Empty replacements
+   - Allow you to track if & how a function was called
+1. Mocks
+   - Replacement for an api that may provide test-specific behavior instead
+
+## Spies
+
+```js
+import { describe, it, expect, vi } from 'vitest';
+import { generateReportData } from './data';
+
+describe('generateReportData()', () => {
+	it('should execute logFn if provided', () => {
+		const logger = vi.fn();
+
+		generateReportData(logger);
+
+		expect(logger).toBeCalled();
+	});
+});
+```
+
+- `vi` allows you to generate empty objects
+- And then test to make sure they are called
+
+## Mocks
+
+```js
+import { it, expect, vi } from 'vitest';
+import { promises as fs } from 'fs';
+import writeData from './io';
+
+vi.mock('fs');
+
+it('should execute the writeFile method', () => {
+	const testData = 'Test';
+	const testFileName = 'test.txt';
+
+	writeData(testData, testFileName);
+
+	// fs is mocked
+	expect(fs.writeFile).toBeCalled();
+});
+```
+
+1. Custom, global Mocks
+   - Create `__mocks__` folder
+   - Create a file for each mock
+1. `vi.mock('fileName')` will auto resolve to the custom implementation
