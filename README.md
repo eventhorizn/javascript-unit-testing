@@ -361,3 +361,32 @@ it('should execute the writeFile method', () => {
    - Create `__mocks__` folder
    - Create a file for each mock
 1. `vi.mock('fileName')` will auto resolve to the custom implementation
+
+# Testing Environments
+
+1. NodeJS is the default
+   - NodeJS APIs and modules are available
+   - Browser and browser APIs not available
+1. JSDOM
+   - Virtual browser env with browser APIs and DOM
+1. Happy-DOM
+   - Vitest only
+   - Virtual browser env with browser APIs and DOM
+
+Switch your testing environment in the package.json
+
+```json
+	"scripts": {
+		"start": "http-server -c-1",
+		"test": "vitest --run --environment happy-dom"
+	},
+```
+
+You can also insert a comment to switch environments in a specific test
+
+- Check the documentation of vitest
+
+## Testing Library Package
+
+- [Link](https://testing-library.com/)
+- Worth checking out for unit testing front end
